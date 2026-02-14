@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disha, Will You Be My Valentine?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&amp;family=Poppins:wght@300;400;600&amp;display=swap" rel="stylesheet">
+  <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ffe8f0 0%, #ffd9e8 50%, #fff0f5 100%);
+        }
+
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .page-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: auto;
+        }
+
+        .page-wrapper.hidden {
+            display: none;
+        }
+
+        /* Floating Elements */
+        .floating-element {
+            position: fixed;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(30px); opacity: 0; }
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: translateX(0) translateY(var(--start-y)); }
+            50% { transform: translateX(var(--sway-amount)) translateY(var(--start-y)); }
+        }
+
+        .float-up {
+            animation: float linear infinite;
+        }
+
+        /* Welcome Page */
+        .welcome-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            padding: 40px;
+        }
+
+        .welcome-gif {
+            width: 280px;
+            height: 280px;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(255, 105, 180, 0.3);
+            animation: scaleIn 0.8s ease-out;
+        }
+
+        .typing-text {
+            font-family: 'Caveat', cursive;
+            font-size: 3em;
+            color: #d946a6;
+            text-align: center;
+            font-weight: 700;
+            text-shadow: 0 0 30px rgba(217, 70, 166, 0.4);
+            min-height: 120px;
+            max-width: 600px;
+            letter-spacing: 1px;
+        }
+
+        .start-btn {
+            font-family: 'Caveat', cursive;
+            font-size: 2.2em;
+            padding: 25px 70px;
+            background: linear-gradient(135deg, #ff1493, #ff69b4);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            box-shadow: 0 8px 30px rgba(255, 20, 147, 0.4);
+            transition: all 0.3s ease;
+            animation: pulse 1.5s ease-in-out infinite;
+            letter-spacing: 2px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 8px 30px rgba(255, 20, 147, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 12px 40px rgba(255, 20, 147, 0.7); }
+        }
+
+        .start-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 12px 40px rgba(255, 20, 147, 0.8);
+        }
+
+        /* Question Pages */
+        .question-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            padding: 40px;
+        }
+
+        .page-heading {
+            font-family: 'Caveat', cursive;
+            font-size: 3.5em;
+            color: #d946a6;
+            text-align: center;
+            font-weight: 700;
+            text-shadow: 0 0 30px rgba(217, 70, 166, 0.4);
+            letter-spacing: 1px;
+        }
+
+        .question-gif {
+            width: 250px;
+            height: 250px;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(255, 105, 180, 0.3);
+            object-fit: cover;
+            animation: scaleIn 0.8s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .button-container {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 60;
+            margin-top: 30px;
+        }
+
+        .yes-btn {
+            font-family: 'Caveat', cursive;
+            font-size: 2.2em;
+            padding: 25px 60px;
+            background: linear-gradient(135deg, #ff1493, #ff69b4);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            box-shadow: 0 8px 30px rgba(255, 20, 147, 0.4);
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .yes-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(255, 20, 147, 0.8);
+        }
+
+        .yes-btn:active {
+            transform: scale(0.98);
+        }
+
+        .no-btn {
+            font-family: 'Caveat', cursive;
+            font-size: 1.1em;
+            padding: 10px 20px;
+            background: #f3e5f5;
+            color: #c084fc;
+            border: 2px solid #d946a6;
+            border-radius: 30px;
+            cursor: default;
+            font-weight: 600;
+            position: absolute;
+            transition: all 0.1s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            opacity: 0.7;
+            right: 40px;
+            white-space: nowrap;
+        }
+
+        .nervous-emoji {
+            display: inline-block;
+        }
+
+        /* Popping hearts */
+        .pop-heart {
+            position: fixed;
+            font-size: 2em;
+            pointer-events: none;
+            z-index: 150;
+        }
+
+        @keyframes popAndFade {
+            0% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0) translateY(-50px);
+                opacity: 0;
+            }
+        }
+
+        .pop-active {
+            animation: popAndFade 0.6s ease-out forwards;
+        }
+
+        /* Rose petals */
+        .petal {
+            position: fixed;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        @keyframes petalFall {
+            to {
+                transform: translateY(100vh) rotateZ(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Celebration Page */
+        .celebration-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            padding: 40px;
+        }
+
+        .celebration-gif {
+            width: 300px;
+            height: 300px;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(217, 70, 166, 0.3);
+            object-fit: cover;
+            animation: scaleIn 0.8s ease-out;
+        }
+
+        .heart-frame-message {
+            font-family: 'Caveat', cursive;
+            font-size: 2.8em;
+            color: #ff1493;
+            text-align: center;
+            text-shadow: 0 0 40px rgba(255, 20, 147, 0.5);
+            padding: 30px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            animation: bounce 0.6s ease-in-out, heartFrameGlow 2s ease-in-out infinite;
+            box-shadow: 0 0 40px rgba(255, 20, 147, 0.3), inset 0 0 30px rgba(255, 192, 203, 0.2);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes heartFrameGlow {
+            0%, 100% {
+                box-shadow: 0 0 40px rgba(255, 20, 147, 0.3), inset 0 0 30px rgba(255, 192, 203, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 60px rgba(255, 20, 147, 0.6), inset 0 0 40px rgba(255, 192, 203, 0.4);
+            }
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            z-index: 150;
+        }
+
+        @keyframes confettiFall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .confetti-active {
+            animation: confettiFall 3s ease-in forwards;
+        }
+
+        /* Balloon */
+        .balloon {
+            position: fixed;
+            width: 40px;
+            height: 50px;
+            border-radius: 50% 50% 50% 0;
+            pointer-events: none;
+            z-index: 150;
+        }
+
+        @keyframes rise {
+            to {
+                transform: translateY(-100vh) rotateZ(-20deg);
+                opacity: 0;
+            }
+        }
+
+        .balloon-active {
+            animation: rise 4s ease-in forwards;
+        }
+
+        /* Sparkles */
+        .sparkle-burst {
+            position: fixed;
+            font-size: 2em;
+            pointer-events: none;
+            z-index: 150;
+        }
+
+        @keyframes sparkleExplode {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .sparkle-active {
+            animation: sparkleExplode 1s ease-out forwards;
+        }
+
+        /* Falling Hearts */
+        .falling-heart {
+            position: fixed;
+            font-size: 3em;
+            pointer-events: none;
+            z-index: 150;
+        }
+
+        @keyframes heartFall {
+            to {
+                transform: translateY(100vh) rotateZ(360deg);
+                opacity: 0;
+            }
+        }
+
+        .heart-fall-active {
+            animation: heartFall 3s ease-in forwards;
+        }
+
+        /* Teddy Bear Bounce */
+        .teddy-bounce {
+            position: fixed;
+            font-size: 4em;
+            pointer-events: none;
+            z-index: 150;
+        }
+
+        @keyframes teddyBounce {
+            0%, 100% {
+                transform: translateY(0) scaleY(1);
+            }
+            50% {
+                transform: translateY(-60px) scaleY(0.95);
+            }
+        }
+
+        .teddy-active {
+            animation: teddyBounce 0.6s ease-in-out;
+        }
+
+        @keyframes fadeInTyping {
+            0% { text-shadow: 0 0 20px rgba(217, 70, 166, 0.6); }
+            50% { text-shadow: 0 0 40px rgba(217, 70, 166, 0.8); }
+            100% { text-shadow: 0 0 20px rgba(217, 70, 166, 0.6); }
+        }
+
+        .typing-animation {
+            animation: fadeInTyping 1s ease-in-out infinite;
+        }
+    </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="background-container" id="bgContainer"></div><!-- Welcome Page -->
+  <div class="page-wrapper" id="welcomePage">
+   <div class="welcome-page">
+    <div class="typing-text typing-animation" id="typingText">
+     I have something very important to ask the prettiest girl in the universe…
+    </div><img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbGtzbGs3a2Ixbmk0a24wem91NDJwano3OGZuaXlsdmhrMDFoaTU5MiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l4pTdcifPZLpDjL1e/giphy.gif" alt="Welcome" class="welcome-gif" loading="lazy" onerror="console.error('Welcome GIF failed to load'); this.style.background='linear-gradient(135deg, #ff1493, #ff69b4)';"> <button class="start-btn" onclick="goToQuestion(1)">Start 💕</button>
+   </div>
+  </div><!-- Question Page 1 -->
+  <div class="page-wrapper hidden" id="question1Page">
+   <div class="question-page">
+    <div class="page-heading">
+     Is Disha the prettiest girl in the whole world? 🌸💖
+    </div><img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeDhmdzAzMHoxb3Zpb3UtDM1YjByenN5aXZyOHBsdm16eXhkdTJsaGJhbGdsa3ZoaCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/8QbwUh40Hl96yMgvOx/giphy.gif" alt="Question 1" class="question-gif" loading="lazy" onerror="console.error('Question 1 GIF failed to load'); this.style.background='linear-gradient(135deg, #ff69b4, #ffb3d9)';">
+    <div class="button-container"><button class="yes-btn" onclick="handleYes(1)">YES OBVIOUSLY 💗</button> <button class="no-btn" id="noBtn1"> <span>No</span> <span class="nervous-emoji">😅</span> </button>
+    </div>
+   </div>
+  </div><!-- Question Page 2 -->
+  <div class="page-wrapper hidden" id="question2Page">
+   <div class="question-page">
+    <div class="page-heading">
+     Does Disha deserve unlimited flowers, chocolates, and cuddles forever? 🧸🌹
+    </div><img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3cjI4cHVqcGI5YjByenN5aXZyOHBsdm16eXhkdTJsaGJhbGdsa3ZoaCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/ANjMpBvC9LeRUopsoU/giphy.gif" alt="Question 2" class="question-gif" loading="lazy" onerror="console.error('Question 2 GIF failed to load'); this.style.background='linear-gradient(135deg, #ff69b4, #ffb3d9)';">
+    <div class="button-container"><button class="yes-btn" onclick="handleYes(2)">YES SHE DOES 💝</button> <button class="no-btn" id="noBtn2"> <span>Nope</span> <span class="nervous-emoji">😅</span> </button>
+    </div>
+   </div>
+  </div><!-- Question Page 3 -->
+  <div class="page-wrapper hidden" id="question3Page">
+   <div class="question-page">
+    <div class="page-heading">
+     Will Disha make me the luckiest person alive by being my Valentine? 💕✨
+    </div>
+    <div class="button-container"><button class="yes-btn" onclick="handleYes(3)">YES FOREVER 💖</button> <button class="no-btn" id="noBtn3"> <span>Hmm</span> <span class="nervous-emoji">😅</span> </button>
+    </div>
+   </div>
+  </div><!-- Celebration Page -->
+  <div class="page-wrapper hidden" id="celebrationPage">
+   <div class="celebration-page"><img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3a2o3bndnMHQ0eHFwOHRoNTAxbmVlZjVzOWZxemU4Y3F3MzNjc2tmaiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/qKQQUKSSbWBkO2V3KX/giphy.gif" alt="Celebration" class="celebration-gif" loading="lazy" onerror="console.error('Celebration GIF failed to load'); this.style.background='linear-gradient(135deg, #ff1493, #ff69b4)';">
+    <div class="heart-frame-message">
+     YAYYYY!!! 💖🌸<br>
+     You just made me the happiest human ever!<br>
+     Officially Disha's Valentine!!! 🧸💕
+    </div>
+   </div>
+  </div>
+  <script>
+        let currentPage = 1;
+
+        // Create floating background elements
+        function createFloatingElements() {
+            const bgContainer = document.getElementById('bgContainer');
+            const elements = ['🌹', '❤️', '✨', '⭐', '🧸', '🌸', '🎀'];
+            
+            for (let i = 0; i < 40; i++) {
+                const element = document.createElement('div');
+                element.className = 'floating-element';
+                element.textContent = elements[Math.floor(Math.random() * elements.length)];
+                
+                const leftPos = Math.random() * 100;
+                const duration = 8 + Math.random() * 6;
+                const delay = Math.random() * 5;
+                const swayAmount = (Math.random() - 0.5) * 60;
+                
+                element.style.left = leftPos + '%';
+                element.style.setProperty('--start-y', '0px');
+                element.style.setProperty('--sway-amount', swayAmount + 'px');
+                element.style.animation = `float ${duration}s linear ${delay}s infinite, sway ${3 + Math.random() * 2}s ease-in-out infinite`;
+                
+                bgContainer.appendChild(element);
+            }
+        }
+
+        // Setup NO buttons to escape
+        function setupNoButton(pageNum) {
+            const noBtn = document.getElementById(`noBtn${pageNum}`);
+            if (!noBtn) return;
+
+            noBtn.addEventListener('mouseenter', () => {
+                const randomX = (Math.random() - 0.5) * 400;
+                const randomY = (Math.random() - 0.5) * 200;
+                noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+            });
+        }
+
+        // Navigate to question
+        function goToQuestion(pageNum) {
+            // Hide current page
+            const pages = document.querySelectorAll('.page-wrapper');
+            pages.forEach(page => page.classList.add('hidden'));
+
+            // Show new page
+            if (pageNum === 1) {
+                document.getElementById('question1Page').classList.remove('hidden');
+                setupNoButton(1);
+            } else if (pageNum === 2) {
+                document.getElementById('question2Page').classList.remove('hidden');
+                createRosePetals();
+                setupNoButton(2);
+            } else if (pageNum === 3) {
+                document.getElementById('question3Page').classList.remove('hidden');
+                setupNoButton(3);
+            }
+            currentPage = pageNum;
+        }
+
+        // Handle YES button
+        function handleYes(pageNum) {
+            if (pageNum === 1) {
+                createPopHearts();
+                setTimeout(() => goToQuestion(2), 800);
+            } else if (pageNum === 2) {
+                createPopHearts();
+                setTimeout(() => goToQuestion(3), 800);
+            } else if (pageNum === 3) {
+                celebrateAndWin();
+            }
+        }
+
+        // Pop hearts animation
+        function createPopHearts() {
+            const container = document.querySelector('.button-container');
+            const rect = container.getBoundingClientRect();
+            
+            for (let i = 0; i < 12; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'pop-heart';
+                heart.textContent = '💖';
+                heart.style.left = (rect.left + rect.width / 2) + 'px';
+                heart.style.top = (rect.top + rect.height / 2) + 'px';
+                heart.style.animation = 'popAndFade 0.6s ease-out forwards';
+                
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 600);
+            }
+        }
+
+        // Rose petals falling
+        function createRosePetals() {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const petal = document.createElement('div');
+                    petal.className = 'petal';
+                    petal.textContent = '🌹';
+                    petal.style.left = Math.random() * 100 + '%';
+                    petal.style.top = '-50px';
+                    petal.style.fontSize = (0.8 + Math.random() * 0.5) + 'em';
+                    petal.style.animation = `petalFall ${3 + Math.random() * 2}s ease-in forwards`;
+                    
+                    document.body.appendChild(petal);
+                    setTimeout(() => petal.remove(), 5000);
+                }, i * 100);
+            }
+        }
+
+        // Celebration effects
+        function createConfetti() {
+            const colors = ['#ff1493', '#ff69b4', '#ffb3d9', '#ffc0cb', '#d946a6', '#c084fc'];
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '-10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animation = `confettiFall ${2 + Math.random() * 1}s ease-in forwards`;
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        function createSparkles() {
+            const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+            for (let i = 0; i < 25; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle-burst';
+                sparkle.textContent = '✨';
+                sparkle.style.left = center.x + 'px';
+                sparkle.style.top = center.y + 'px';
+                
+                const angle = (i / 25) * Math.PI * 2;
+                const distance = 250;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                
+                sparkle.style.setProperty('--tx', tx + 'px');
+                sparkle.style.setProperty('--ty', ty + 'px');
+                sparkle.style.animation = 'sparkleExplode 1s ease-out forwards';
+                
+                document.body.appendChild(sparkle);
+                setTimeout(() => sparkle.remove(), 1000);
+            }
+        }
+
+        function createFallingHearts() {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'falling-heart';
+                    heart.textContent = '💖';
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.top = '-50px';
+                    heart.style.animation = 'heartFall 3s ease-in forwards';
+                    
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), 3000);
+                }, i * 100);
+            }
+        }
+
+        function createTeddyBounces() {
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    const teddy = document.createElement('div');
+                    teddy.className = 'teddy-bounce';
+                    teddy.textContent = '🧸';
+                    teddy.style.left = (Math.random() * 60 + 20) + '%';
+                    teddy.style.top = (Math.random() * 40 + 40) + '%';
+                    teddy.style.animation = `teddyBounce 0.6s ease-in-out`;
+                    
+                    document.body.appendChild(teddy);
+                    setTimeout(() => teddy.remove(), 600);
+                }, i * 150);
+            }
+        }
+
+        function createBalloons() {
+            const colors = ['#ff1493', '#ff69b4', '#ffb3d9', '#ffc0cb', '#d946a6', '#c084fc'];
+            for (let i = 0; i < 12; i++) {
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                balloon.style.left = Math.random() * 100 + '%';
+                balloon.style.bottom = '-60px';
+                balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                balloon.style.animation = `rise ${3 + Math.random() * 1}s ease-in forwards`;
+                balloon.style.animationDelay = (i * 0.15) + 's';
+                
+                document.body.appendChild(balloon);
+                setTimeout(() => balloon.remove(), 4500);
+            }
+        }
+
+        function celebrateAndWin() {
+            // Hide all pages
+            document.querySelectorAll('.page-wrapper').forEach(page => page.classList.add('hidden'));
+            
+            // Show celebration page
+            document.getElementById('celebrationPage').classList.remove('hidden');
+            
+            // Trigger all celebration effects
+            createConfetti();
+            createSparkles();
+            createFallingHearts();
+            createTeddyBounces();
+            createBalloons();
+            
+            // Create rose petals
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const petal = document.createElement('div');
+                    petal.className = 'petal';
+                    petal.textContent = '🌹';
+                    petal.style.left = Math.random() * 100 + '%';
+                    petal.style.top = '-50px';
+                    petal.style.fontSize = (0.8 + Math.random() * 0.5) + 'em';
+                    petal.style.animation = `petalFall ${3 + Math.random() * 2}s ease-in forwards`;
+                    
+                    document.body.appendChild(petal);
+                    setTimeout(() => petal.remove(), 5000);
+                }, i * 80);
+            }
+        }
+
+        // Initialize
+        createFloatingElements();
+        setupNoButton(1);
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cdc4857f6309a8d',t:'MTc3MTA2OTE0Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
